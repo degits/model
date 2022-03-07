@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Sentence s1 = Sentence.fromJson(line: " *m*code1*/m*Y*b*code1*/b*Y*b*code1*/b*",);
+    Sentence s1 = Sentence.fromJson(line: "*m*code1*/m*Y*b*code1*/b*Y*b*code1*/b*",);
     
     return Scaffold(
       appBar: AppBar(),
