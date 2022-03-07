@@ -37,7 +37,7 @@ class Sentence extends StatelessWidget {
         mutableLine = mutableLine.replaceRange(startIndex, endIndex + 4, replacement);
       } else {
         print("❌❌sentence.dart > ERROR(math tag): Unclosed or closed with diffrent tag found ❌❌");
-        break;//!now added
+        break;
       }
 
     } else if (line[startIndex + 1] == "c") {
@@ -54,7 +54,7 @@ class Sentence extends StatelessWidget {
       } else {
         if (kDebugMode) {
           print("❌❌sentence.dart > ERROR(code tag): Unclosed or closed with diffrent tag found ❌❌");
-          break;//!now added
+          break;
         }
       }
     } else if (line[startIndex + 1] == "b") {
@@ -71,13 +71,13 @@ class Sentence extends StatelessWidget {
       } else {
         if (kDebugMode) {
           print("❌❌sentence.dart > ERROR(bold tag): Unclosed or closed with diffrent tag found ❌❌");
-          break;//!now added
+          break;
         }
       }
     } else {
       if (kDebugMode) {
         print("❌❌sentence.dart > ERROR: Untagged Astrix(*) found ❌❌");
-        break;//!now added
+        break;
       }
     }
     print(mutableLine);

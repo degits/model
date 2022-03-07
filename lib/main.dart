@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:model/sentence.dart';
+import 'package:model/sentence_2.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,7 +28,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Sentence s1 = Sentence.fromJson(line: "*m*code1*/m*YY*b*code1*/b*Y*b*code1*/b*",);
+    Sentence s1 = Sentence(line: "Y *m*code1*/m* - * ",);
+    //"*m*code1*/m* YY *b*code1*/b* Y *b*code1*/b*"
     
     return Scaffold(
       appBar: AppBar(),
