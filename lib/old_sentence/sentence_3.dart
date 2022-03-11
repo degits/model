@@ -4,7 +4,7 @@ import 'package:model/bold.dart';
 import 'package:model/math.dart';
 import 'package:model/word.dart';
 
-import 'code.dart';
+import '../code.dart';
 
 class Sentence extends StatelessWidget {
   const Sentence({Key? key, required this.line}) : super(key: key);
@@ -34,101 +34,111 @@ class Sentence extends StatelessWidget {
       while (true) {
         startIndex = mutableLine.indexOf("*");
         //print("StartIndex: $startIndex");
+//!0000000000000000000000000000000000000000000000000000000000000000000000000000000000000
         if (startIndex == -1) {
           //No more tags remain
           break;
-        } else if (mutableLine[startIndex + 1] == "m") {
-          //It's a math
-          endIndex = mutableLine.indexOf("*", startIndex + 3);
-          //print("endIndex: $endIndex");
-          if (mutableLine[endIndex + 1] == "/" &&
-              mutableLine[endIndex + 2] == "m") {
-            String replacement = "";
-            String subString = mutableLine.substring(startIndex + 3, endIndex);
-            for (int i = 0; i < subString.length + 7; i++) {
-              replacement = replacement + "^";
-            }
-            mutableLine =
-                mutableLine.replaceRange(startIndex, endIndex + 4, replacement);
-            //!-----V2 -ON WORKING-----
-            taggedParts.add(
-              WidgetSpan(
-                alignment: PlaceholderAlignment.baseline,
-                baseline: TextBaseline.alphabetic,
-                child: Maths(text: subString),
-              ),
-            );
-            //!--------------------
-          } else {
-            print(
-                "❌❌sentence.dart > ERROR(math tag): Unclosed or closed with diffrent tag found ❌❌");
-            break;
-          }
-        } else if (line[startIndex + 1] == "c") {
-          //It's a code
-          endIndex = mutableLine.indexOf("*", startIndex + 3);
-          //print("endIndex: $endIndex");
-          if (mutableLine[endIndex + 1] == "/" &&
-              mutableLine[endIndex + 2] == "c") {
-            String replacement = "";
-            String subString = mutableLine.substring(startIndex + 3, endIndex);
-            for (int i = 0; i < subString.length + 7; i++) {
-              replacement = replacement + "^";
-            }
-            mutableLine =
-                mutableLine.replaceRange(startIndex, endIndex + 4, replacement);
-            //!-----V2 -ON WORKING-----
-            taggedParts.add(
-              WidgetSpan(
-                alignment: PlaceholderAlignment.baseline,
-                baseline: TextBaseline.alphabetic,
-                child: Code(text: subString),
-              ),
-            );
-            //!--------------------
-          } else {
-            if (kDebugMode) {
-              print(
-                  "❌❌sentence.dart > ERROR(code tag): Unclosed or closed with diffrent tag found ❌❌");
-              break;
-            }
-          }
-        } else if (line[startIndex + 1] == "b") {
-          //It's a bold
-          endIndex = mutableLine.indexOf("*", startIndex + 3);
-          //print("endIndex: $endIndex");
-          if (mutableLine[endIndex + 1] == "/" &&
-              mutableLine[endIndex + 2] == "b") {
-            String replacement = "";
-            String subString = mutableLine.substring(startIndex + 3, endIndex);
-            for (int i = 0; i < subString.length + 7; i++) {
-              replacement = replacement + "^";
-            }
-            mutableLine =
-                mutableLine.replaceRange(startIndex, endIndex + 4, replacement);
-            //!-----V2 -ON WORKING-----
-            taggedParts.add(
-              WidgetSpan(
-                alignment: PlaceholderAlignment.baseline,
-                baseline: TextBaseline.alphabetic,
-                child: Bold(text: subString),
-              ),
-            );
-            //!--------------------
-          } else {
-            if (kDebugMode) {
-              print(
-                  "❌❌sentence.dart > ERROR(bold tag): Unclosed or closed with diffrent tag found ❌❌");
-              break;
-            }
-          }
-        } else {
+//!0000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+        } else if (mutableLine[mutableLine.length - 1] == "*") {
           if (kDebugMode) {
             print("❌❌sentence.dart > ERROR: Untagged Astrix(*) found ❌❌");
+          }
+          break;
+        } else {
+//!0000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+          if (mutableLine[startIndex + 1] == "m") {
+            //It's a math
+            endIndex = mutableLine.indexOf("*", startIndex + 3);
+            //print("endIndex: $endIndex");
+            if (mutableLine[endIndex + 1] == "/" &&
+                mutableLine[endIndex + 2] == "m") {
+              String replacement = "";
+              String subString =
+                  mutableLine.substring(startIndex + 3, endIndex);
+              for (int i = 0; i < subString.length + 7; i++) {
+                replacement = replacement + "^";
+              }
+              mutableLine = mutableLine.replaceRange(
+                  startIndex, endIndex + 4, replacement);
+              //!-----V2 -ON WORKING-----
+              taggedParts.add(
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.baseline,
+                  baseline: TextBaseline.alphabetic,
+                  child: Maths(text: subString),
+                ),
+              );
+              //!--------------------
+            } else {
+              print(
+                  "❌❌sentence.dart > ERROR(math tag): Unclosed or closed with diffrent tag found ❌❌");
+              break;
+            }
+          } else if (line[startIndex + 1] == "c") {
+            //It's a code
+            endIndex = mutableLine.indexOf("*", startIndex + 3);
+            //print("endIndex: $endIndex");
+            if (mutableLine[endIndex + 1] == "/" &&
+                mutableLine[endIndex + 2] == "c") {
+              String replacement = "";
+              String subString =
+                  mutableLine.substring(startIndex + 3, endIndex);
+              for (int i = 0; i < subString.length + 7; i++) {
+                replacement = replacement + "^";
+              }
+              mutableLine = mutableLine.replaceRange(
+                  startIndex, endIndex + 4, replacement);
+              //!-----V2 -ON WORKING-----
+              taggedParts.add(
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.baseline,
+                  baseline: TextBaseline.alphabetic,
+                  child: Code(text: subString),
+                ),
+              );
+              //!--------------------
+            } else {
+              if (kDebugMode) {
+                print(
+                    "❌❌sentence.dart > ERROR(code tag): Unclosed or closed with diffrent tag found ❌❌");
+                break;
+              }
+            }
+          } else if (line[startIndex + 1] == "b") {
+            //It's a bold
+            endIndex = mutableLine.indexOf("*", startIndex + 3);
+            //print("endIndex: $endIndex");
+            if (mutableLine[endIndex + 1] == "/" &&
+                mutableLine[endIndex + 2] == "b") {
+              String replacement = "";
+              String subString =
+                  mutableLine.substring(startIndex + 3, endIndex);
+              for (int i = 0; i < subString.length + 7; i++) {
+                replacement = replacement + "^";
+              }
+              mutableLine = mutableLine.replaceRange(
+                  startIndex, endIndex + 4, replacement);
+              //!-----V2 -ON WORKING-----
+              taggedParts.add(
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.baseline,
+                  baseline: TextBaseline.alphabetic,
+                  child: Bold(text: subString),
+                ),
+              );
+              //!--------------------
+            } else {
+              if (kDebugMode) {
+                print(
+                    "❌❌sentence.dart > ERROR(bold tag): Unclosed or closed with diffrent tag found ❌❌");
+                break;
+              }
+            }
+          } else {
             break;
           }
+//!000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
         }
-        //print("mutableLine after extractTaggedParts method: $mutableLine");
       }
     }
 

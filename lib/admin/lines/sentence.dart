@@ -1,31 +1,38 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:model/bold.dart';
-import 'package:model/math.dart';
-import 'package:model/word.dart';
+import 'package:model/admin/lines/lines.dart';
 
-import 'code.dart';
+class AdminSentence extends Lines{
+  @override
+  final String subString;
 
-class Sentence extends StatelessWidget {
-  Sentence({Key? key, required this.line}) : super(key: key);
+  AdminSentence({required this.subString});
 
-  //fromJson       return widget
-  //fromString     return widget    default constructor
-  //toJson         return map/list...
-  //String? content;
-  final String line;
 
-  //toJson
-  Map<dynamic, dynamic> toJson() {
-    return {};
+  factory AdminSentence.fromString(String subString) {
+    return AdminSentence(subString: subString);
   }
 
-  @override
-  Widget build(BuildContext context) {
+
+  /*
+  {
+    "type": "sentence",
+    "content": [
+      {
+        "type": "bold",
+        "content": "Bold text"
+      },
+      {
+        "type": "word",
+        "content": "This is a word"
+      }
+    ]
+  }
+  */
+  Map<String, dynamic> toJson() {
     //!  common variables
-    String mutableLine = line;
-    List<WidgetSpan> taggedParts = [];
-    List<WidgetSpan> sentenceAllPartsInOrder = []; //taggedParts + wordParts
+    String mutableLine = subString;
+    List<Map<String, dynamic>> taggedParts = [];
+    List<Map<String, dynamic>> sentenceAllPartsInOrder = []; //taggedParts + wordParts
 
     //!  closure function - 1 declaration
     void extractTaggedParts() {
@@ -52,19 +59,16 @@ class Sentence extends StatelessWidget {
                 mutableLine.replaceRange(startIndex, endIndex + 4, replacement);
             //!-----V2 -ON WORKING-----
             taggedParts.add(
-              WidgetSpan(
-                alignment: PlaceholderAlignment.baseline,
-                baseline: TextBaseline.alphabetic,
-                child: Maths(text: subString),
-              ),
+              {
+                "type": "math",
+                "content": subString
+              }
             );
             //!--------------------
           } else {
-            print(
-                "❌❌sentence.dart > ERROR(math tag): Unclosed or closed with diffrent tag found ❌❌");
-            break;
+            throw  ErrorDescription("⚠️  ⚠️  ⚠️\nsentence.dart > ERROR(math tag): Unclosed or closed with diffrent tag found \n⚠️  ⚠️  ⚠️");
           }
-        } else if (line[startIndex + 1] == "c") {
+        } else if (subString[startIndex + 1] == "c") {
           //It's a code
           endIndex = mutableLine.indexOf("*", startIndex + 3);
           //print("endIndex: $endIndex");
@@ -79,21 +83,16 @@ class Sentence extends StatelessWidget {
                 mutableLine.replaceRange(startIndex, endIndex + 4, replacement);
             //!-----V2 -ON WORKING-----
             taggedParts.add(
-              WidgetSpan(
-                alignment: PlaceholderAlignment.baseline,
-                baseline: TextBaseline.alphabetic,
-                child: Code(text: subString),
-              ),
+              {
+                "type": "code",
+                "content": subString
+              }
             );
             //!--------------------
           } else {
-            if (kDebugMode) {
-              print(
-                  "❌❌sentence.dart > ERROR(code tag): Unclosed or closed with diffrent tag found ❌❌");
-              break;
-            }
+            throw  ErrorDescription("⚠️  ⚠️  ⚠️\nsentence.dart > ERROR(code tag): Unclosed or closed with diffrent tag found \n⚠️  ⚠️  ⚠️");
           }
-        } else if (line[startIndex + 1] == "b") {
+        } else if (subString[startIndex + 1] == "b") {
           //It's a bold
           endIndex = mutableLine.indexOf("*", startIndex + 3);
           //print("endIndex: $endIndex");
@@ -108,25 +107,17 @@ class Sentence extends StatelessWidget {
                 mutableLine.replaceRange(startIndex, endIndex + 4, replacement);
             //!-----V2 -ON WORKING-----
             taggedParts.add(
-              WidgetSpan(
-                alignment: PlaceholderAlignment.baseline,
-                baseline: TextBaseline.alphabetic,
-                child: Bold(text: subString),
-              ),
+              {
+                "type": "bold",
+                "content": subString
+              }
             );
             //!--------------------
           } else {
-            if (kDebugMode) {
-              print(
-                  "❌❌sentence.dart > ERROR(bold tag): Unclosed or closed with diffrent tag found ❌❌");
-              break;
-            }
+             throw ErrorDescription("⚠️  ⚠️  ⚠️\nsentence.dart > ERROR(bold tag): Unclosed or closed with diffrent tag found \n⚠️  ⚠️  ⚠️");
           }
         } else {
-          if (kDebugMode) {
-            print("❌❌sentence.dart > ERROR: Untagged Astrix(*) found ❌❌");
-            break;
-          }
+           throw ErrorDescription("⚠️  ⚠️  ⚠️\nsentence.dart > ERROR: Untagged Astrix(*) found \n⚠️  ⚠️  ⚠️");
         }
         //print("mutableLine after extractTaggedParts method: $mutableLine");
       }
@@ -137,84 +128,62 @@ class Sentence extends StatelessWidget {
     void extractAllParts() {
       int countForTaggedPartList = 0;
       List<String> splittedMutuableLine = mutableLine.split(" ");
-      print("splittedMutuableLine:  $splittedMutuableLine");
+      //print("splittedMutuableLine:  $splittedMutuableLine");
 
       for (int i = 0; i < splittedMutuableLine.length; i++) {
         //print("splitttedPart index: $i  =${splittedMutuableLine[i]}");
         //!  ⚠️isEmpty is must ⚠️
         if (splittedMutuableLine[i].isEmpty) {
-          print("Empty part==============");
           //!  ----v3 working----------
           sentenceAllPartsInOrder.add(
-            const WidgetSpan(
-              alignment: PlaceholderAlignment.baseline,
-              baseline: TextBaseline.alphabetic,
-              child: Word(text: " "),
-            ),
+            {
+              "type": "word",
+              "content": " "
+            }
           );
           //!  ------------------------
-          print("index=$i isEmpty true");
+          //print("index=$i isEmpty true");
         } else if (splittedMutuableLine[i][0] == "^") {
-          print("Tagged part================");
-          print("index=$i is a '^^^^^....'");
           //!  Below if condtion is Use for avoiding this -> "^^^^^^^^^^^^XXX" error.
           //?  ERROR: Missing forward space between tag and word
           for (int c = 0; c < splittedMutuableLine[i].length; c++) {
             if (splittedMutuableLine[i][c] != "^") {
-              if (kDebugMode) {
-                print(
-                    "❌❌sentence.dart > ERROR: Missing forward space of the word in : ${splittedMutuableLine[i]} ❌❌");
-                break;
-              }
+              throw ErrorDescription("⚠️  ⚠️  ⚠️\nsentence.dart > ERROR: Missing forward space of the word in : ${splittedMutuableLine[i]} \n⚠️  ⚠️  ⚠️");
             }
           }
           //!  ----v3 working----------
           sentenceAllPartsInOrder.add(taggedParts[countForTaggedPartList]);
+          countForTaggedPartList++;
           //For adding space
           sentenceAllPartsInOrder.add(
-            const WidgetSpan(
-              alignment: PlaceholderAlignment.baseline,
-              baseline: TextBaseline.alphabetic,
-              child: Word(text: " "),
-            ),
+            {
+              "type": "word",
+              "content": " "
+            }
           );
           //!  ------------------------
         } else {
-          print("Word part===============");
           //!  Below if condtion is Use for avoiding this -> "XXX^^^^^^^^^^^^" error.
           //?  ERROR: Missing backward space between tag and word
           if (splittedMutuableLine[i].contains("^")) {
-            if (kDebugMode) {
-              print(
-                  "❌❌sentence.dart > ERROR: Missing backward space of the word in : ${splittedMutuableLine[i]} ❌❌");
-              break;
-            }
-          } else if (splittedMutuableLine[i].contains("*")) {
-            if (kDebugMode) {
-              print("❌❌sentence.dart > ERROR: Untagged Astrix(*) found ❌❌");
-              break;
-            }
+            throw ErrorDescription("⚠️  ⚠️  ⚠️\nsentence.dart > ERROR: Missing backward space of the word in : ${splittedMutuableLine[i]} \n⚠️  ⚠️  ⚠️");
           } else {
             //!  ----v3 working----------
             sentenceAllPartsInOrder.add(
-              WidgetSpan(
-                alignment: PlaceholderAlignment.baseline,
-                baseline: TextBaseline.alphabetic,
-                child: Word(text: splittedMutuableLine[i]),
-              ),
+              {
+                "type": "word",
+                "content": splittedMutuableLine[i]
+              }
             );
             //For adding space
             sentenceAllPartsInOrder.add(
-              const WidgetSpan(
-                alignment: PlaceholderAlignment.baseline,
-                baseline: TextBaseline.alphabetic,
-                child: Word(text: " "),
-              ),
+              {
+                "type": "word",
+                "content": " "
+              }
             );
             //!  ------------------------
           }
-
-          print("index=$i is a word");
         }
       }
     }
@@ -224,13 +193,9 @@ class Sentence extends StatelessWidget {
     //!  call declared function - 2
     extractAllParts();
 
-    return Padding(
-      padding: const EdgeInsets.only(left: 10),
-      child: Text.rich(
-        TextSpan(
-          children: sentenceAllPartsInOrder,
-        ),
-      ),
-    );
+    return {
+      "type": "sentence",
+      "content": sentenceAllPartsInOrder
+    };
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:model/bold.dart';
@@ -60,6 +62,7 @@ class Sentence extends StatelessWidget {
             );
             //!--------------------
           } else {
+            throw Error();
             print(
                 "❌❌sentence.dart > ERROR(math tag): Unclosed or closed with diffrent tag found ❌❌");
             break;
@@ -87,6 +90,7 @@ class Sentence extends StatelessWidget {
             );
             //!--------------------
           } else {
+            throw ErrorDescription("⚠️  ⚠️  ⚠️\nsentence.dart > ERROR(code tag): Unclosed or closed with diffrent tag found \n⚠️  ⚠️  ⚠️");
             if (kDebugMode) {
               print(
                   "❌❌sentence.dart > ERROR(code tag): Unclosed or closed with diffrent tag found ❌❌");
@@ -116,6 +120,7 @@ class Sentence extends StatelessWidget {
             );
             //!--------------------
           } else {
+             throw ErrorDescription("⚠️  ⚠️  ⚠️\nsentence.dart > ERROR(bold tag): Unclosed or closed with diffrent tag found \n⚠️  ⚠️  ⚠️");
             if (kDebugMode) {
               print(
                   "❌❌sentence.dart > ERROR(bold tag): Unclosed or closed with diffrent tag found ❌❌");
@@ -123,6 +128,7 @@ class Sentence extends StatelessWidget {
             }
           }
         } else {
+           throw ErrorDescription("⚠️  ⚠️  ⚠️\nsentence.dart > ERROR: Untagged Astrix(*) found \n⚠️  ⚠️  ⚠️");
           if (kDebugMode) {
             print("❌❌sentence.dart > ERROR: Untagged Astrix(*) found ❌❌");
             break;
@@ -143,7 +149,6 @@ class Sentence extends StatelessWidget {
         //print("splitttedPart index: $i  =${splittedMutuableLine[i]}");
         //!  ⚠️isEmpty is must ⚠️
         if (splittedMutuableLine[i].isEmpty) {
-          print("Empty part==============");
           //!  ----v3 working----------
           sentenceAllPartsInOrder.add(
             const WidgetSpan(
@@ -153,12 +158,13 @@ class Sentence extends StatelessWidget {
             ),
           );
           //!  ------------------------
-          print("index=$i isEmpty true");
+          //print("index=$i isEmpty true");
         } else if (splittedMutuableLine[i][0] == "^") {
           //!  Below if condtion is Use for avoiding this -> "^^^^^^^^^^^^XXX" error.
           //?  ERROR: Missing forward space between tag and word
           for (int c = 0; c < splittedMutuableLine[i].length; c++) {
             if (splittedMutuableLine[i][c] != "^") {
+              throw ErrorDescription("⚠️  ⚠️  ⚠️\nsentence.dart > ERROR: Missing forward space of the word in : ${splittedMutuableLine[i]} \n⚠️  ⚠️  ⚠️");
               if (kDebugMode) {
                 print(
                     "❌❌sentence.dart > ERROR: Missing forward space of the word in : ${splittedMutuableLine[i]} ❌❌");
@@ -182,14 +188,10 @@ class Sentence extends StatelessWidget {
           //!  Below if condtion is Use for avoiding this -> "XXX^^^^^^^^^^^^" error.
           //?  ERROR: Missing backward space between tag and word
           if (splittedMutuableLine[i].contains("^")) {
+            throw ErrorDescription("⚠️  ⚠️  ⚠️\nsentence.dart > ERROR: Missing backward space of the word in : ${splittedMutuableLine[i]} \n⚠️  ⚠️  ⚠️");
             if (kDebugMode) {
               print(
                   "❌❌sentence.dart > ERROR: Missing backward space of the word in : ${splittedMutuableLine[i]} ❌❌");
-              break;
-            }
-          } else if (splittedMutuableLine[i].contains("*")) {
-            if (kDebugMode) {
-              print("❌❌sentence.dart > ERROR: Untagged Astrix(*) found ❌❌");
               break;
             }
           } else {
